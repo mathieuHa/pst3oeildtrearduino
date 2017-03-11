@@ -1,19 +1,24 @@
 #include <Servo.h>
 
 
-#define DROITE  'd'
-#define GAUCHE  'g'
-#define HAUT    'h'
-#define BAS     'b'
-#define SERVO_Y 9
-#define SERVO_X 8
-#define MILIEU  90
-#define MIN_X   30
-#define MAX_X   150
-#define MIN_Y   40
-#define MAX_Y   150
-#define SPEED   20
-#define SLEEP   300
+#define DROITE       'd'
+#define GAUCHE       'g'
+#define HAUT         'h'
+#define BAS          'b'
+#define HAUT_DROITE  'p'
+#define HAUT_GAUCHE  'a'
+#define BAS_DROITE   'n'
+#define BAS_GAUCHE   'w'
+#define CENTER       'c'
+#define SERVO_Y      9
+#define SERVO_X      8
+#define MILIEU       90
+#define MIN_X        10
+#define MAX_X        170
+#define MIN_Y        40
+#define MAX_Y        150
+#define SPEED        20
+#define SLEEP        300
 
 char message;
 
@@ -36,7 +41,6 @@ void setup() {
 }
 
 void loop() {
-  
   if (Serial.available())  {
     message = Serial.read();  // on soustrait le caractère 0, qui vaut 48 en ASCII
    
@@ -61,6 +65,31 @@ void loop() {
         //Tourner vers le BAS
         Serial.println("BAS");
         turn(-SPEED, BAS, servo_y);
+      break;
+      case HAUT_GAUCHE:
+        //Tourner à gauche
+        Serial.println("BAS-GAUCHE");
+        turnDiag(SPEED, BAS_GAUCHE, servo_x, servo_y);
+      break;
+      case HAUT_DROITE:
+        //Tourner à droite
+        Serial.println("HAUT-DROITE");
+        turnDiag(SPEED, HAUT_DROITE, servo_x, servo_y);
+      break;
+      case BAS_DROITE:
+        //Tourner vers le haut
+        Serial.println("BAS-DROITE");
+        turnDiag(SPEED, BAS_DROITE, servo_x, servo_y);
+      break;
+      case BAS_GAUCHE:
+        //Tourner vers le BAS
+        Serial.println("BAS-GAUCHE");
+        turnDiag(SPEED, BAS_GAUCHE, servo_x, servo_y);
+      break;
+      case CENTER:
+        //Tourner vers le CENTER
+        Serial.println("CENTER");
+        center();
       break;
     }
   }
@@ -126,6 +155,98 @@ void turn(int value,char Direction, Servo servo)
   }  
 }
 
+void turnDiag(int value,char Direction, Servo servoX, Servo servoY)
+{
+  switch(Direction)
+  {
+    case HAUT_GAUCHE:
+      if (pos_x - value >=  MIN_X && pos_y + value <=  MAX_Y){
+        Serial.println("GO HAUT-GAUCHE");
+        pos_x-=value;
+        pos_y+=value;
+        Serial.println(pos_x);
+        Serial.println(pos_y);
+        servoX.attach(SERVO_X);
+        servoY.attach(SERVO_Y);
+        servoX.write(pos_x);
+        servoY.write(pos_y);
+        delay(200);
+        servoX.detach();
+        servoY.detach();
+      } else {
+        Serial.println("Limite HAUT ou GAUCHE atteinte.");
+      }
+        break;
+    case HAUT_DROITE:    
+      if (pos_x + value <=  MAX_X &&  pos_y + value <=  MAX_Y){
+        Serial.println("GO HAUT-DROITE");
+        pos_x+=value;
+        pos_y+=value;
+        Serial.println(pos_x);
+        Serial.println(pos_y);
+        servoX.attach(SERVO_X);
+        servoY.attach(SERVO_Y);
+        servoX.write(pos_x);
+        servoY.write(pos_y);
+        delay(200);
+        servoY.detach();
+        servoX.detach();
+      } else {
+        Serial.println("Limite HAUT-DROITE atteinte.");
+      }
+        break;
+    case BAS_GAUCHE:
+      if (pos_y - value >=  MIN_Y && pos_x - value >=  MIN_X){
+        Serial.println("GO BAS-GAUCHE");
+        pos_y-=value;
+        pos_x-=value;
+        Serial.println(pos_y);
+        Serial.println(pos_x);
+        servoX.attach(SERVO_X);
+        servoY.attach(SERVO_Y);
+        servoY.write(pos_y);
+        servoX.write(pos_x);
+        delay(200);
+        servoX.detach();
+        servoY.detach();
+      } else {
+        Serial.println("Limite BAS-GAUCHE atteinte.");
+      }
+        break;
+    case BAS_DROITE:    
+      if (pos_y - value >=  MIN_Y && pos_x + value <=  MAX_X){
+        Serial.println("GO BAS-DROITE");
+        pos_y-=value;
+        pos_x+=value;
+        Serial.println(pos_y);
+        Serial.println(pos_x);
+        servoY.attach(SERVO_Y);
+        servoX.attach(SERVO_X);
+        servoY.write(pos_y);
+        servoX.write(pos_x);
+        delay(200);
+        servoX.detach();    
+        servoY.detach();    
+      } else {
+        Serial.println("Limite BAS-DROITE atteinte.");
+      }
+        break;
+  }  
+}
+
+void center ()
+{
+  pos_y = MILIEU;
+  pos_x = MILIEU;
+  servo_x.attach(SERVO_X);
+  servo_y.attach(SERVO_Y);
+  servo_x.write(MILIEU);
+  servo_y.write(MILIEU);
+  delay(SLEEP);
+  servo_x.detach();
+  servo_y.detach();
+}
+
 void init_servo ()
 {
   servo_x.attach(SERVO_X);
@@ -133,15 +254,15 @@ void init_servo ()
   servo_x.write(MILIEU);
   servo_y.write(MILIEU);
   delay(SLEEP);
-  servo_x.write(MILIEU+30);
+  servo_x.write(MILIEU+80);
   delay(SLEEP);
-  servo_x.write(MILIEU-30);
+  servo_x.write(MILIEU-80);
   delay(SLEEP);
   servo_x.write(MILIEU);
   delay(SLEEP);
-  servo_y.write(MILIEU+30);
+  servo_y.write(MILIEU+80);
   delay(SLEEP);
-  servo_y.write(MILIEU-30);
+  servo_y.write(MILIEU-35);
   delay(SLEEP);
   servo_y.write(MILIEU);
   delay(SLEEP);
