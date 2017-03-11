@@ -68,8 +68,8 @@ void loop() {
       break;
       case HAUT_GAUCHE:
         //Tourner à gauche
-        Serial.println("BAS-GAUCHE");
-        turnDiag(SPEED, BAS_GAUCHE, servo_x, servo_y);
+        Serial.println("HAUT-GAUCHE");
+        turnDiag(SPEED, HAUT_GAUCHE, servo_x, servo_y);
       break;
       case HAUT_DROITE:
         //Tourner à droite

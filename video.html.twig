@@ -1,0 +1,81 @@
+{% extends "DTREOeilSiteBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ parent() }} Video
+{% endblock %}
+
+{% block bundle_body %}
+    <div class="page-header">
+        <h1>Video</h1>
+    </div>
+    <div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title">Streaming Video</h3>
+		</div>
+		<div class="panel-body">
+			
+			
+		</div>
+	</div>
+    	<p>
+	<button type="button" class="glyphicon glyphicon-arrow-left" id="left">Gauche</button>
+	<button type="button" class="glyphicon glyphicon-arrow-right" id="right">Droite</button>
+        <button type="button" class="glyphicon glyphicon-arrow-up" id="up">Haut</button>
+        <button type="button" class="glyphicon glyphicon-arrow-down" id="down">Bas</button>
+	</p>
+	<p>
+	<button type="button" class="glyphicon glyphicon-arrow-hand-left" id="up-left">Haut-Gauche</button>
+	<button type="button" class="glyphicon glyphicon-arrow-hand-right" id="up-right">Haut-Droite</button>
+        <button type="button" class="glyphicon glyphicon-arrow-hand-up" id="down-left">Bas-Gauche</button>
+        <button type="button" class="glyphicon glyphicon-arrow-hand-down" id="down-right">Bas-Droit</button>
+	</p>
+	<p>
+	
+	<p>
+	<button type="button" class="glyphicon glyphicon-screenshot" id="center">Centrer</button>
+	
+
+
+{% endblock %}
+
+{% block bundle_javascript %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('assets/js/jsmpeg.min.js') }}"></script>
+
+    <script src="{{ asset('http://192.168.1.27:8080/socket.io/socket.io.js') }}"></script>
+
+    <script type="text/javascript">
+        var socket = io.connect('http://192.168.1.27:8080');
+        socket.on('message', function(message) {
+            alert('Le serveur a un message pour vous : ' + message);
+        });
+
+        $('#left').click(function () {
+            socket.emit('left', 'LEFT');
+        });
+	$('#right').click(function () {
+            socket.emit('right', 'RIGHT');
+        });
+	$('#up').click(function () {
+            socket.emit('up', 'UP');
+        });
+	$('#down').click(function () {
+            socket.emit('down', 'DOWN');
+        });
+	$('#up-left').click(function () {
+            socket.emit('up-left', 'UP-LEFT');
+        });
+	$('#up-right').click(function () {
+            socket.emit('up-right', 'UP-RIGHT');
+        });
+	$('#down-left').click(function () {
+            socket.emit('down-left', 'DOWN-LEFT');
+        });
+	$('#down-right').click(function () {
+            socket.emit('down-right', 'DOWN-RIGHT');
+        });
+	$('#center').click(function () {
+            socket.emit('center', 'CENTER');
+        });
+    </script>
+{% endblock %}
