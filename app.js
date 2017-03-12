@@ -14,20 +14,20 @@ var io = require('socket.io').listen(server);
 var spawn = require('child_process').spawn;
 
 var Tourner = function(direction, val){
-	console.log("Tourner la caméra : " + direction );
-		
-	var move = spawn('python', ['/home/pi/pst3/pt.py', val]);
-	move.stdout.on('data', (data) => {
-	  console.log(`stdout: ${data}`);
-	});
+    console.log("Tourner la caméra : " + direction );
+        
+    var move = spawn('python', ['/home/pi/pst3/pt.py', val]);
+    move.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
 
-	move.stderr.on('data', (data) => {
-	  console.log(`stderr: ${data}`);
-	});
+    move.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`);
+    });
 
-	move.on('close', (code) => {
-	  console.log(`child process exited with code ${code}`);
-	});
+    move.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
 }
 
 
@@ -36,31 +36,37 @@ io.sockets.on('connection', function (socket) {
     socket.emit('message', 'Vous êtes bien connecté !');
     
     socket.on('right', function () {
-	Tourner("DROITE",'d');
+    Tourner("DROITE",'d');
     });
     socket.on('left', function () {
-	Tourner("GAUCHE",'g');
+    Tourner("GAUCHE",'g');
     });
     socket.on('up', function () {
-	Tourner("HAUT",'h');
+    Tourner("HAUT",'h');
     });
     socket.on('down', function () {
-	Tourner("BAS",'b');
+    Tourner("BAS",'b');
     });
     socket.on('up-right', function () {
-	Tourner("HAUT-DROITE",'p');
+    Tourner("HAUT-DROITE",'p');
     });
     socket.on('down-left', function () {
-	Tourner("BAS-GAUCHE",'w');
+    Tourner("BAS-GAUCHE",'w');
     });
     socket.on('down-right', function () {
-	Tourner("BAS-DROITE",'n');
+    Tourner("BAS-DROITE",'n');
     });
     socket.on('up-left', function () {
-	Tourner("HAUT-GAUCHE",'a');
+    Tourner("HAUT-GAUCHE",'a');
     });
     socket.on('center', function () {
-	Tourner("Centrer",'c');
+    Tourner("Centrer",'c');
+    });
+    socket.on('light-on', function () {
+    Tourner("LIGHT-ON",'l');
+    });
+    socket.on('light-off', function () {
+    Tourner("LIGHT-OFF",'o');
     });
 });
 

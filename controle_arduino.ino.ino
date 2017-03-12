@@ -20,6 +20,13 @@
 #define SPEED        20
 #define SLEEP        300
 
+#define LIGHT_ON     'l'
+#define LIGHT_OFF    'o'
+
+#define LED_R        4
+#define LED_B        5
+#define LED_G        6
+
 char message;
 
 Servo servo_x;
@@ -29,12 +36,17 @@ int pos_x;
 int pos_y;
 
 void setup() {
-  
-  message = ' ';  
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_B, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  lightOff();
+  lightOn();
+  message = ' ';  
   pos_x = MILIEU;
   pos_y = MILIEU;
   init_servo();
+  init_led();
   Serial.begin(9600);
   Serial.print("Lancement du programme !");
   delay(1000);
@@ -43,7 +55,9 @@ void setup() {
 void loop() {
   if (Serial.available())  {
     message = Serial.read();  // on soustrait le caractère 0, qui vaut 48 en ASCII
-   
+
+    digitalWrite(LED_BUILTIN, HIGH); // En réception d'un signal on allume la led 13
+    
     switch (message) 
     {
       case GAUCHE:
@@ -91,9 +105,20 @@ void loop() {
         Serial.println("CENTER");
         center();
       break;
+      case LIGHT_ON:
+        //Allumer les Leds
+        Serial.println("LIGHT ON");
+        lightOn();
+      break;
+      case LIGHT_OFF:
+        //Eteindre les Leds
+        Serial.println("LIGHT OFF");
+        lightOff();
+      break;
     }
   }
   delay(100);
+  digitalWrite(LED_BUILTIN, LOW); // Fin de traitement on éteint la led 13
 }
 
 void turn(int value,char Direction, Servo servo)
@@ -270,6 +295,37 @@ void init_servo ()
   servo_y.detach();
 }
 
+void lightOn(){
+  delay(SLEEP);
+  digitalWrite(LED_R, HIGH);
+  digitalWrite(LED_G, HIGH);
+  digitalWrite(LED_B, HIGH);
+  delay(SLEEP);
+}
 
+void lightOff(){
+  delay(SLEEP);
+  digitalWrite(LED_R, LOW);
+  digitalWrite(LED_G, LOW);
+  digitalWrite(LED_B, LOW);
+  delay(SLEEP);
+}
 
+void init_led (){
+  digitalWrite(LED_R, LOW);
+  digitalWrite(LED_G, LOW);
+  digitalWrite(LED_B, LOW);
+  delay(SLEEP);
+  digitalWrite(LED_B, HIGH);
+  delay(SLEEP);
+  digitalWrite(LED_B, LOW);
+  digitalWrite(LED_G, HIGH);
+  delay(SLEEP);
+  digitalWrite(LED_G, LOW);
+  digitalWrite(LED_R, HIGH);
+  delay(SLEEP);
+  digitalWrite(LED_B, HIGH);
+  digitalWrite(LED_G, HIGH);
+  delay(SLEEP);
+}
 

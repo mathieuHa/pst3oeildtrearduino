@@ -9,31 +9,34 @@
         <h1>Video</h1>
     </div>
     <div class="panel panel-info">
-		<div class="panel-heading">
-			<h3 class="panel-title">Streaming Video</h3>
-		</div>
-		<div class="panel-body">
-			
-			
-		</div>
-	</div>
-    	<p>
-	<button type="button" class="glyphicon glyphicon-arrow-left" id="left">Gauche</button>
-	<button type="button" class="glyphicon glyphicon-arrow-right" id="right">Droite</button>
+        <div class="panel-heading">
+            <h3 class="panel-title">Streaming Video</h3>
+        </div>
+        <div class="panel-body">
+            
+            
+        </div>
+    </div>
+        <p>
+    <button type="button" class="glyphicon glyphicon-arrow-left" id="left">Gauche</button>
+    <button type="button" class="glyphicon glyphicon-arrow-right" id="right">Droite</button>
         <button type="button" class="glyphicon glyphicon-arrow-up" id="up">Haut</button>
         <button type="button" class="glyphicon glyphicon-arrow-down" id="down">Bas</button>
-	</p>
-	<p>
-	<button type="button" class="glyphicon glyphicon-arrow-hand-left" id="up-left">Haut-Gauche</button>
-	<button type="button" class="glyphicon glyphicon-arrow-hand-right" id="up-right">Haut-Droite</button>
-        <button type="button" class="glyphicon glyphicon-arrow-hand-up" id="down-left">Bas-Gauche</button>
-        <button type="button" class="glyphicon glyphicon-arrow-hand-down" id="down-right">Bas-Droit</button>
-	</p>
-	<p>
-	
-	<p>
-	<button type="button" class="glyphicon glyphicon-screenshot" id="center">Centrer</button>
-	
+    </p>
+    <p>
+    <button type="button" class="glyphicon glyphicon-hand-left" id="up-left">Haut-Gauche</button>
+    <button type="button" class="glyphicon glyphicon-hand-right" id="up-right">Haut-Droite</button>
+        <button type="button" class="glyphicon glyphicon-hand-up" id="down-left">Bas-Gauche</button>
+        <button type="button" class="glyphicon glyphicon-hand-down" id="down-right">Bas-Droit</button>
+    </p>
+    <p>
+    
+    <p>
+    <button type="button" class="glyphicon glyphicon-screenshot" id="center">Centrer</button></p>
+    <p>
+    <button type="button" class="glyphicon glyphicon-flash" aria-hidden="true" id="light-on">Allumer</button>
+    <button type="button" class="glyphicon glyphicon-off" aria-hidden="true" id="light-off">Eteindre</button></p>
+    
 
 
 {% endblock %}
@@ -53,29 +56,35 @@
         $('#left').click(function () {
             socket.emit('left', 'LEFT');
         });
-	$('#right').click(function () {
+    $('#right').click(function () {
             socket.emit('right', 'RIGHT');
         });
-	$('#up').click(function () {
+    $('#up').click(function () {
             socket.emit('up', 'UP');
         });
-	$('#down').click(function () {
+    $('#down').click(function () {
             socket.emit('down', 'DOWN');
         });
-	$('#up-left').click(function () {
+    $('#up-left').click(function () {
             socket.emit('up-left', 'UP-LEFT');
         });
-	$('#up-right').click(function () {
+    $('#up-right').click(function () {
             socket.emit('up-right', 'UP-RIGHT');
         });
-	$('#down-left').click(function () {
+    $('#down-left').click(function () {
             socket.emit('down-left', 'DOWN-LEFT');
         });
-	$('#down-right').click(function () {
+    $('#down-right').click(function () {
             socket.emit('down-right', 'DOWN-RIGHT');
         });
-	$('#center').click(function () {
+    $('#center').click(function () {
             socket.emit('center', 'CENTER');
+        });
+    $('#light-on').click(function () {
+            socket.emit('light-on', 'LIGHT-ON');
+        });
+    $('#light-off').click(function () {
+            socket.emit('light-off', 'LIGHT-OFF');
         });
     </script>
 {% endblock %}
