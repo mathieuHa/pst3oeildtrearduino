@@ -1,6 +1,8 @@
 var http = require('http');
 var fs = require('fs');
 
+var nbUser = 0;
+
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(req, res) {
     fs.readFile('./index.html', 'utf-8', function(error, content) {
@@ -16,7 +18,7 @@ var spawn = require('child_process').spawn;
 var Tourner = function(direction, val){
     console.log("Tourner la caméra : " + direction );
         
-    var move = spawn('python', ['/home/pi/pst3/pt.py', val]);
+    var move = spawn('python', ['/home/pi/pst3oeildtrearduino/asserv_arduino.py', val]);
     move.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
@@ -30,11 +32,31 @@ var Tourner = function(direction, val){
     });
 }
 
+var Control_cam = function(cmd, val, par){
+    console.log("Commande de la cam : " + cmd + val + par );
+
+    var control = spawn('sudo echo ', [cmd, ' ', val, ' ', par, '> /var/www/html/camera/FIFO']);
+
+    control.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+});
+
+    control.stderr.on('data', (data) => {
+        console.log(`stderr: ${data}`);
+});
+
+    control.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+});
+}
+
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
     socket.emit('message', 'Vous êtes bien connecté !');
-    
+    nbUser++;
+    socket.emit('message', nbUser, ' connectés');
+
     socket.on('right', function () {
     Tourner("DROITE",'d');
     });
