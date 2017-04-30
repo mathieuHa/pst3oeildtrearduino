@@ -1,4 +1,6 @@
 #!/bin/bash
 
-sudo echo 'im 1' > /var/www/html/camera/FIFO
+echo "'$1 $2' > /var/www/html/camera/FIFO"
+sudo echo "$1 $2" > /var/www/html/camera/FIFO
+
 

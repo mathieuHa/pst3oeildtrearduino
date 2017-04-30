@@ -35,7 +35,7 @@ var Tourner = function(direction, val){
 var Control_cam = function(cmd, val, par){
     console.log("Commande de la cam : " + cmd + val + par );
 
-    var control = spawn('sh', ['/home/pi/oeildtre/pst3oeildtrearduino/cam.sh']);
+    var control = spawn('sh', ['/home/pi/oeildtre/pst3oeildtrearduino/cam.sh', 'im', 1]);
 
     control.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
