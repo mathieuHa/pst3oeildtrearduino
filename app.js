@@ -57,6 +57,10 @@ io.sockets.on('connection', function (socket) {
     nbUser++;
     socket.emit('message', nbUser, ' connectés');
 
+    socket.on('picture', function () {
+        Control_cam('im','1','');
+    })
+
     socket.on('right', function () {
     Tourner("DROITE",'d');
     });
