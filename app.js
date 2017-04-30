@@ -32,10 +32,10 @@ var Tourner = function(direction, val){
     });
 }
 
-var Control_cam = function(cmd, val, par){
-    console.log("Commande de la cam : " + cmd + val + par );
+var Control_cam = function(val, par){
+    console.log("Commande de la cam : " + val + par );
 
-    var control = spawn('sh', ['/home/pi/oeildtre/pst3oeildtrearduino/cam.sh', 'im', 1]);
+    var control = spawn('sh', ['/home/pi/oeildtre/pst3oeildtrearduino/cam.sh', val, par]);
 
     control.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
@@ -58,7 +58,15 @@ io.sockets.on('connection', function (socket) {
     socket.emit('message', nbUser, ' connectés');
 
     socket.on('picture', function () {
-        Control_cam('im','1','');
+        Control_cam('im','1');
+    })
+
+    socket.on('start_record', function () {
+        Control_cam('ca','1');
+    })
+
+    socket.on('stop_record', function () {
+        Control_cam('ca','0');
     })
 
     socket.on('right', function () {
