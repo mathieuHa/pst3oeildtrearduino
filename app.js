@@ -18,7 +18,7 @@ var spawn = require('child_process').spawn;
 var Tourner = function(direction, val){
     console.log("Tourner la caméra : " + direction );
         
-    var move = spawn('python', ['/home/pi/pst3oeildtrearduino/asserv_arduino.py', val]);
+    var move = spawn('python', ['/home/pi/oeildtre/pst3oeildtrearduino/asserv_arduino.py', val]);
     move.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
