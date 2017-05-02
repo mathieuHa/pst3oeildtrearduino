@@ -35,11 +35,14 @@ echo "----------------------------------------------------------"
 echo "Installation de RPi_Cam_Web_Interface dans /var/www/html/camera"
 echo "----------------------------------------------------------"
 
+cd
+mkdir oeildtre
+cd oeildtre
 
 git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
 cd RPi_Cam_Web_Interface
-chmod u+x *.sh
-./install.sh
+sudo chmod u+x *.sh
+sudo ./install.sh
 
 # Il faut absolument l'installer dans /var/www/html/camera et non dans /var/www/html/camera
 # La suppression de ce soft supprimera tout ce qui se trouve dans /var/www/html
@@ -187,7 +190,6 @@ echo "Installation de service nodejs nécessaires"
 echo "----------------------------------------------------------"
 
 cd
-mkdir oeildtre
 cd oeildtre/
 
 git clone https://github.com/mathieuHa/pst3oeildtrearduino.git
