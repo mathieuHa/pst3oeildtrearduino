@@ -208,8 +208,7 @@ echo "----------------------------------------------------------"
 echo "Serveur NodeJS"
 echo "----------------------------------------------------------"
 
-cd
-cd oeildtre/
+cd /home/pi/oeildtre/pst3oeildtrearduino
 node app.js
 node servo.js
 
@@ -219,9 +218,46 @@ echo "----------------------------------------------------------"
 
 LD_LIBRARY_PATH=/usr/local/lib mjpg_streamer -i "input_file.so -f /run/shm/mjpeg -n cam.jpg" -o "output_http.so -p 8090 -w /var/www/html -c oeil:dtre"
 
-http://www.framboise314.fr/donnez-de-lespace-a-votre-framboise314-un-disque-dur-pour-le-raspberry-pi/
-sudo    nano    /etc/fstab
-/dev/sda1   /mnt/usb/   ext3   defaults   0   3
+#------------------------------------#
+#### Installation du crontab backup et relancement du serveur nodejs et stream ####
+#------------------------------------#
 
-/var/www/html/pst3oeildtre/web/media $ ln -s /mnt/usb/ data
+echo "----------------------------------------------------------"
+echo "Installation du crontab backup et relancement du serveur nodejs et stream"
+echo "----------------------------------------------------------"
+
+cd /home/pi/oeildtre/pst3oeildtrearduino
+mkdir backup
+
+sudo nano backup.sh
+# Changer MOT_DE_PASSE par le mot de passe choisi pour la base de donnée
+chmod +x backup.sh
+chmod +x watchdogapp.sh
+chmod +x watchdogservo.sh
+chmod +x watchdogstream.sh
+
+# ATTENTION Ajout en bas du fichier crontab des lignes suivantes sans les executer dans le terminal
+0 0 * * * /bin/sh /home/pi/oeildtre/pst3oeildtrearduino/backup.sh
+* * * * * /bin/sh /home/pi/oeildtre/pst3oeildtrearduino/watchdogapp.sh
+* * * * * /bin/sh /home/pi/oeildtre/pst3oeildtrearduino/watchdogservo.sh
+* * * * * /bin/sh /home/pi/oeildtre/pst3oeildtrearduino/watchdogstream.sh
+
+#Pour cela lancer :
+crontab -e
+# Et copier coller les 4 lignes au dessus en bas du fichier
+
+#Pour visualiser si cela a bien marché on tape :
+crontab -l
+# on devrait voir apparaitre les 4 lignes précédantes
+
+#------------------------------------#
+#### Installation de l'espace de stockage des images/videos ####
+#------------------------------------#
+
+echo "----------------------------------------------------------"
+echo "Installation de l'espace de stockage des images/videos"
+echo "----------------------------------------------------------"
+
+cd /var/www/html/pst3oeildtre/web/media
+ln -s /media/usb0/ data
 
