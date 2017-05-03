@@ -7,9 +7,32 @@ echo "----------------------------------------------------------"
 echo "Mise à jour de la Raspberry -- Changement du mot de passe"
 echo "----------------------------------------------------------"
 
-sudo passwd ## changement du mot de passe de la raspberry default=raspberry
+setxkbmap fr # clavier en français
+sudo passwd ## changement du mot de passe de la raspberry default=raspberry ON NE MET PAS ROOT
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y upgrade
+
+#------------------------------------#
+#### Installation de VNC SSH VNC CAMERA ENABLED #####
+#------------------------------------#
+
+echo "----------------------------------------------------------"
+echo "Installation de VNC SSH VNC CAMERA ENABLED"
+echo "----------------------------------------------------------"
+
+# CREATION D'UN COMPTE VNC GRATUIT AJOUT DE LA RASP
+
+sudo apt-get install -y realvnc-vnc-server realvnc-vnc-viewer
+sudo raspi-config
+
+# Dans advanced option on met VNC SSH et CAMERA a activé = yes#
+# mettre clavier et langue a français
+# resolution DMT mode 82
+# GPU 128
+sudo reboot
+sudo systemctl enable vncserver-x11-serviced.service
+sudo reboot
+
 
 #------------------------------------#
 #### Installation du serveur Web et autre tools ####
@@ -19,13 +42,15 @@ echo "----------------------------------------------------------"
 echo "Installation du serveur web, php, mysql et phpmyadmin"
 echo "----------------------------------------------------------"
 
-sudo apt-get install apache2
+sudo apt-get install -y apache2
 sudo chown -R pi:www-data /var/www/html/
 sudo chmod -R 770 /var/www/html/
 
-sudo apt-get install php
-sudo apt-get install mysql-server php5-mysql
-sudo apt-get install phpmyadmin
+sudo apt-get install -y php5
+sudo apt-get install -y mysql-server php5-mysql
+sudo apt-get install -y phpmyadmin
+
+sudo reboot
 
 #------------------------------------#
 #### Installation DE RPI_CAMERA_WEB_INTERFACE ####
@@ -43,9 +68,38 @@ git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
 cd RPi_Cam_Web_Interface
 sudo chmod u+x *.sh
 sudo ./install.sh
+ou autre installer vérifer que ça marche
+
+/etc/apache2/sites-available modifier /var/www/html dans raspicam.conf
 
 # Il faut absolument l'installer dans /var/www/html/camera et non dans /var/www/html/camera
 # La suppression de ce soft supprimera tout ce qui se trouve dans /var/www/html
+
+#------------------------------------#
+#### Installation du Stream Video ####
+#------------------------------------#
+
+echo "----------------------------------------------------------"
+echo " Installation du Stream Video"
+echo "----------------------------------------------------------"
+
+
+cd
+cd oeildtre
+sudo apt-get -y install libjpeg8-dev imagemagick libv4l-dev
+sudo ln -s /usr/include/linux/videodev2.h /usr/include/linux/videodev.h
+wget http://sourceforge.net/code-snapshots/svn/m/mj/mjpg-streamer/code/mjpg-streamer-code-182.zip
+unzip mjpg-streamer-code-182.zip
+cd mjpg-streamer-code-182/mjpg-streamer
+make mjpg_streamer input_file.so output_http.so
+sudo cp mjpg_streamer /usr/local/bin
+sudo cp output_http.so input_file.so /usr/local/lib/
+
+cd ../../
+rm -rf mjpg-streamer-182
+
+/usr/local/bin/mjpg_streamer -i "/usr/local/lib/input_file.so -f /run/shm/mjpeg -n cam.jpg" -o "/usr/local/lib/output_http.so -p 8090 -w /var/www/html"
+
 
 #------------------------------------#
 #### Installation d'outils PHP utile à Symfony ####
@@ -111,7 +165,7 @@ composer install
 echo "Chargement des fixtures/fake-data dans la base de données"
 
 # Chargement des données tests dans la base de donnée
-php bin/console doctrine:fixtures:load
+echo y | php bin/console doctrine:fixtures:load
 #Careful, database will be purged. Do you want to continue y/N ?y
 # > purging database
 # > loading DTRE\OeilBundle\DataFixtures\ORM\LoadDataData
@@ -176,7 +230,7 @@ echo "Installation de NPM bower"
 echo "----------------------------------------------------------"
 
 
-sudo apt-get install npm # gestionnaire de paquet nodejs
+sudo apt-get install -y npm # gestionnaire de paquet nodejs
 sudo npm install bower -g # gestionnaire de librairies javascripts / gestion des assets
 
 bower install
@@ -214,11 +268,6 @@ cd /home/pi/oeildtre/pst3oeildtrearduino
 node app.js
 node servo.js
 
-echo "----------------------------------------------------------"
-echo "Stream Video"
-echo "----------------------------------------------------------"
-
-LD_LIBRARY_PATH=/usr/local/lib mjpg_streamer -i "input_file.so -f /run/shm/mjpeg -n cam.jpg" -o "output_http.so -p 8090 -w /var/www/html -c oeil:dtre"
 
 #------------------------------------#
 #### Installation du crontab backup et relancement du serveur nodejs et stream ####
