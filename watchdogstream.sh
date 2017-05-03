@@ -1,6 +1,6 @@
 #!/bin/bash
 
-stream="$(ps aux | grep "stream" -w| wc -l)"
+stream="$(ps aux | grep "mjpg_streamer" -w| wc -l)"
 echo "${stream}"
 
 if [ ${stream} -ne 2 ]
