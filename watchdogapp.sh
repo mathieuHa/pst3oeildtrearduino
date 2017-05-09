@@ -7,5 +7,5 @@ if [ ${app} -ne 2 ]
 then
         cd /home/pi/oeildtre/pst3oeildtrearduino
         pwd
-        /usr/bin/node app.js
+        /usr/local/bin/node app.js
 fi
