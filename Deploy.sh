@@ -230,7 +230,7 @@ echo "Installation de NPM bower"
 echo "----------------------------------------------------------"
 
 
-sudo apt-get install -y npm # gestionnaire de paquet nodejs
+sudo apt-get install -y npm nodejs# gestionnaire de paquet nodejs
 sudo npm install bower -g # gestionnaire de librairies javascripts / gestion des assets
 
 bower install

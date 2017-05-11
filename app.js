@@ -62,7 +62,7 @@ io.sockets.on('connection', function (socket) {
     })
 
     socket.on('start_record', function () {
-        Control_cam('ca','1');
+        Control_cam('ca','1 10');
     })
 
     socket.on('stop_record', function () {
