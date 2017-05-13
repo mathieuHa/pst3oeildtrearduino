@@ -10,5 +10,5 @@ cd ${path}
 th=`ls *.jpg -rt | head -1`
 img=`ls *.jpg -rt | head -2 | tail -n 1`
 
-mv ${th} path/${1}/${th}
-mv ${img} path/${1}/${img}
+mv ${th} path/${1}/${th} >>logcmd.txt 2>&1
+mv ${img} path/${1}/${img} >>logcmd.txt 2>&1
